@@ -9,6 +9,7 @@
 | [TRACK2-RED-ENTRY.md](./TRACK2-RED-ENTRY.md) | Red Gate·Cycle 1(FR-04)·예시 3 Green 범위 |
 | [cursor-prompts/DUAL-TRACK-PROMPTS.md](./cursor-prompts/DUAL-TRACK-PROMPTS.md) | Cursor 프롬프트 6종 |
 | [.cursor/rules/dual-track-tdd.mdc](../.cursor/rules/dual-track-tdd.mdc) | AI 상시 규칙 |
+| [.cursor/skills/unitconverter-dual-track/](../.cursor/skills/unitconverter-dual-track/SKILL.md) | Track 2 Red/Green/Refactor 절차 Skill |
 
 ---
 
@@ -46,6 +47,7 @@ Track 1 (현재) ──► Track 2 Red ──► Green ──► Refactor
 | 2 | Entity Red | 2 | #2 |
 | 3 | Green 한 TC (FR-04) | 2 | #3 · [TRACK2-RED-ENTRY](./TRACK2-RED-ENTRY.md) |
 | 4 | Cursor Rule | 1+2 | `.cursor/rules/dual-track-tdd.mdc` |
+| 4b | Track 2 Skill | 2 | `.cursor/skills/unitconverter-dual-track/` |
 | 5 | Control Red | 2 | #5 |
 | 6 | Boundary CLI Red | 2 | #6 |
 

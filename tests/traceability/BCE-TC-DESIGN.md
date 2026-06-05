@@ -25,6 +25,9 @@
 | `test_boundary_FR01_parse_trims_whitespace` | raw=`" meter:2.5 "` | `parse_unit_value(raw)` | unit=`meter`, value=`2.5` |
 | `test_boundary_FR09_reject_missing_colon` | raw=`"meter2.5"` | `parse_unit_value(raw)` | `ParseError` |
 | `test_boundary_FR09_reject_non_numeric` | raw=`"meter:abc"` | `parse_unit_value(raw)` | `ParseError` |
+| `test_boundary_FR09_reject_bare_unit` | raw=`"meter"` (FR-09) | `parse_unit_value(raw)` | `ParseError` |
+| `test_boundary_FR09_reject_bare_non_unit` | raw=`"abc"` (FR-09) | `parse_unit_value(raw)` | `ParseError` |
+| `test_boundary_FR09_reject_extra_colon` | raw=`"meter:2.5:extra"` (레거시 시드 갭) | `parse_unit_value(raw)` | `ParseError` |
 
 ---
 
@@ -33,7 +36,7 @@
 ### Entity
 | TC | Given | When | Then |
 |----|-------|------|------|
-| `test_entity_FR02_convert_to_all_registered_units` | registry: meter/feet/yard | `convert(Quantity("meter", 2.5))` | `values` 3개, unit 집합 일치 |
+| `test_entity_FR02_convert_to_all_registered_units` | registry: meter/feet/yard | `convert(Quantity("meter", 2.5))` | feet≈8.2021, yard≈2.7340 (FR-02) |
 | `test_entity_FR02_feet_input_converts_to_meter` | 동일 registry | `convert(Quantity("feet", 8.2021))` | meter≈2.5 |
 
 ### Control
@@ -204,6 +207,7 @@
 | TC | Given | When | Then |
 |----|-------|------|------|
 | `test_control_FR10_reject_unknown_unit` | validator, registry without mile | `validate(Quantity("mile", 1))` | `UnknownUnitError` |
+| `test_control_FR10_reject_unregistered_cubit` | default registry (FR-10) | `validate(Quantity("cubit", 1))` | `UnknownUnitError` |
 
 ### Boundary
 | TC | Given | When | Then |

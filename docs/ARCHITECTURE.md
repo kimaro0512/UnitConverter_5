@@ -121,6 +121,9 @@ class OutputFormatter(Protocol):
 
 ## 3. PRD 요구사항 ID
 
+> **ID SSOT:** 본 절 FR-01~11, NFR-01~06. TC·코드·문서는 상세 ID만 사용.  
+> Given/When/Then·BCE 매핑: [REQ_TRACEABILITY.md](../tests/traceability/REQ_TRACEABILITY.md).
+
 ### Functional Requirements (FR)
 
 | ID | 요구사항 | README 출처 |

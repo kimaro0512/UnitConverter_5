@@ -11,6 +11,32 @@ BCE 설계: [BCE-TC-DESIGN.md](./BCE-TC-DESIGN.md)
 
 ---
 
+## 상세 FR/NFR 추적 (SSOT)
+
+구현·TC·코드 주석은 **FR-01~11, NFR-01~06** 만 사용.
+
+| ID | 요구 | Given | Then | P |
+|----|------|-------|------|---|
+| FR-01 | `단위:값` 파싱 | `meter:2.5` | value=2.5, unit=meter | P0 |
+| FR-02 | 전 단위 변환 출력 | meter 2.5 | feet≈8.2021, yard≈2.7340 | P0 |
+| FR-03 | 초기 3단위 | default registry | meter, feet, yard | P0 |
+| FR-04 | meter hub 비율 | meter 1.0 | feet≈3.28084, yard≈1.09361 | P0 |
+| FR-05 | JSON/YAML 설정 로드 | units.json | 비율 로드 | P1 |
+| FR-06 | 동적 단위 등록 | `1 cubit = 0.4572 meter` | 즉시 변환 | P1 |
+| FR-07 | 출력 포맷 | `--format` | json/csv/table | P1 |
+| FR-08 | 음수 거부 | `meter:-1` | ValidationError | P0 |
+| FR-09 | 형식 오류 | `meter` / `abc` / `meter:2.5:extra` | ParseError | P0 |
+| FR-10 | 미등록 단위 | `cubit:1` (미등록) | UnknownUnitError | P0 |
+| FR-11 | 반올림 출력 | 8.2021 feet | 표시 `8.2` | P0 |
+| NFR-01 | OCP | inch 추가 | engine 분기 없음 | P0 |
+| NFR-02 | SRP | — | Parser/Registry/Engine/Formatter 분리 | P0 |
+| NFR-03 | pytest 검증 | — | BCE TC 전체 | P0 |
+| NFR-04 | FR↔TC 추적 | — | test name + 본 문서 | P0 |
+| NFR-05 | I/O 분리 | — | Control TC에 stdin mock 없음 | P0 |
+| NFR-06 | magic number 제거 | engine 소스 | `3.28084` 리터럴 없음 | P0 |
+
+---
+
 ## Functional Requirements (BCE)
 
 | ID | BCE | 요구사항 | 모듈 | 테스트 파일 | 테스트 케이스 | 상태 |
@@ -29,7 +55,10 @@ BCE 설계: [BCE-TC-DESIGN.md](./BCE-TC-DESIGN.md)
 | FR-07 | Boundary | JSON/CSV/표 | `output/*_formatter.py` | `tests/boundary/test_formatters.py` | `test_boundary_FR07_*` | designed |
 | FR-08 | Control | 음수 거부 | `input/validator.py` | `tests/control/test_validator.py` | `test_control_FR08_reject_negative_value` | designed |
 | FR-09 | Boundary | 형식 오류 | `input/parser.py` | `tests/boundary/test_parser.py` | `test_boundary_FR09_reject_missing_colon` | designed |
+| FR-09 | Boundary | 단위만·비단위 문자열 | `input/parser.py` | `tests/boundary/test_parser.py` | `test_boundary_FR09_reject_bare_unit`, `test_boundary_FR09_reject_bare_non_unit` | designed |
+| FR-09 | Boundary | 추가 콜론 | `input/parser.py` | `tests/boundary/test_parser.py` | `test_boundary_FR09_reject_extra_colon` | designed |
 | FR-10 | Control | unknown unit | `input/validator.py` | `tests/control/test_validator.py` | `test_control_FR10_reject_unknown_unit` | designed |
+| FR-10 | Control | 미등록 cubit | `input/validator.py` | `tests/control/test_validator.py` | `test_control_FR10_reject_unregistered_cubit` | designed |
 | FR-11 | Entity | 반올림 정책 | `domain/models.py` | `tests/entity/test_conversion_result.py` | `test_entity_FR11_rounding_policy_one_decimal` | designed |
 | FR-11 | Boundary | text 출력 | `output/text_formatter.py` | `tests/boundary/test_formatters.py` | `test_boundary_FR11_text_output_one_decimal` | designed |
 
