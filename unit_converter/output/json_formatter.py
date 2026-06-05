@@ -5,10 +5,11 @@ from __future__ import annotations
 import json
 
 from unit_converter.domain.models import ConversionResult
+from unit_converter.output.presentation import all_converted_values
 
 
 class JsonFormatter:
-    """Serialize conversion results as JSON."""
+    """Serialize conversion results as JSON (full precision export)."""
 
     def format(self, result: ConversionResult) -> str:
         payload = {
@@ -18,7 +19,7 @@ class JsonFormatter:
             },
             "values": [
                 {"unit": item.unit, "value": item.value}
-                for item in result.values
+                for item in all_converted_values(result)
             ],
         }
         return json.dumps(payload)

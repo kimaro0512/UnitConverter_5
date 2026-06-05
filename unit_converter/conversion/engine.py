@@ -14,13 +14,17 @@ class ConversionEngine:
 
     def convert(self, quantity: Quantity) -> ConversionResult:
         """FR-02, FR-04: Convert input to every registered unit via meter hub."""
-        source = self._registry.get_definition(quantity.unit)
+        definitions = {
+            name: self._registry.get_definition(name)
+            for name in self._registry.unit_names()
+        }
+        source = definitions[quantity.unit]
         base_value = quantity.value / source.ratio_to_base
-        values = [
+        values = tuple(
             ConvertedValue(
                 unit=name,
-                value=base_value * self._registry.get_definition(name).ratio_to_base,
+                value=base_value * definitions[name].ratio_to_base,
             )
             for name in self._registry.unit_names()
-        ]
+        )
         return ConversionResult(source=quantity, values=values)

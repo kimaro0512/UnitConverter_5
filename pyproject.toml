@@ -32,4 +32,3 @@ addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["unit_converter"]
-omit = ["unit_converter/app/cli.py"]

@@ -11,9 +11,9 @@ def test_entity_FR06_registry_stores_cubit(empty_registry) -> None:
     # Given
     cubit = UnitDefinition(name="cubit", ratio_to_base=0.4572)
     # When
-    empty_registry.register(cubit)
+    registry = empty_registry.register(cubit)
     # Then
-    assert empty_registry.has_unit("cubit")
+    assert registry.has_unit("cubit")
 
 
 def test_entity_FR06_cubit_in_conversion_output(empty_registry) -> None:
@@ -21,8 +21,8 @@ def test_entity_FR06_cubit_in_conversion_output(empty_registry) -> None:
     # Given
     meter = UnitDefinition(name="meter", ratio_to_base=1.0)
     cubit = UnitDefinition(name="cubit", ratio_to_base=0.4572)
-    empty_registry.register_many([meter, cubit])
-    engine = ConversionEngine(empty_registry)
+    registry = empty_registry.register_many([meter, cubit])
+    engine = ConversionEngine(registry)
     # When
     result = engine.convert(Quantity(unit="meter", value=1.0))
     units = {item.unit for item in result.values}

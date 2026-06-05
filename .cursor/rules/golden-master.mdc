@@ -1,0 +1,47 @@
+---
+description: Golden Master baseline — 단일 approved.txt, 41 BCE 스냅샷 (Refactor·회귀)
+globs: tests/test_golden_master.py,tests/golden_master_report.py,tests/golden/**,tests/_approval.py
+alwaysApply: false
+---
+
+# Golden Master (UnitConverter_5)
+
+## SSOT
+
+- **상세:** `docs/GOLDEN-MASTER.md`
+- **TC:** `tests/test_golden_master.py::test_golden_master_all_scenarios` (1건)
+- **파일:** `tests/golden/unit_converter.approved.txt` (1개)
+- **빌더:** `tests/golden_master_report.py`
+
+## 게이트
+
+1. `python -m pytest tests/ -q` → **42 passed** (41 BCE + Golden 1).
+2. Golden TC `UPDATE_GOLDEN` 없이 → **matched**.
+
+## 갱신 (의도적 출력 변경 후만)
+
+```powershell
+$env:UPDATE_GOLDEN='1'
+python -m pytest tests/test_golden_master.py::test_golden_master_all_scenarios -v
+Remove-Item Env:UPDATE_GOLDEN -ErrorAction SilentlyContinue
+python -m pytest tests/test_golden_master.py::test_golden_master_all_scenarios -v
+```
+
+**금지:** `unit_converter.approved.txt` 수동 편집 · assert 완화.
+
+## 포맷
+
+- 41 블록 `[test_...]` — 알파벳 순
+- 오류: `E008 NEGATIVE_VALUE`, `E009 PARSE_ERROR`, `E010 UNKNOWN_UNIT`
+- CLI: `format_golden_cli` · 포매터: raw `format()` 출력
+
+## Agent 선언
+
+```
+Phase: Refactor · Golden Master
+UPDATE_GOLDEN=1 → unit_converter.approved.txt → diff 리뷰 → matched 확인
+```
+
+## 참고
+
+- `.cursorrules` · `docs/GOLDEN-MASTER.md` · `.cursor/rules/dual-track-tdd.mdc`

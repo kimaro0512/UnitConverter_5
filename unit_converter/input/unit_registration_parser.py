@@ -13,14 +13,17 @@ _REGISTRATION_PATTERN = re.compile(
 )
 
 
-def parse_unit_registration(raw: str) -> UnitDefinition:
+def parse_unit_registration(
+    raw: str,
+    expected_base_unit: str = "meter",
+) -> UnitDefinition:
     """FR-06: Parse ``1 cubit = 0.4572 meter`` into a UnitDefinition."""
     match = _REGISTRATION_PATTERN.match(raw.strip())
     if not match:
         raise ParseError(f"Invalid registration format: {raw!r}")
     unit_name, ratio_str, base_unit = match.groups()
-    if base_unit.lower() != "meter":
-        raise ParseError(f"Base unit must be meter: {raw!r}")
+    if base_unit.lower() != expected_base_unit.lower():
+        raise ParseError(f"Base unit must be {expected_base_unit}: {raw!r}")
     try:
         ratio = float(ratio_str)
     except ValueError as exc:

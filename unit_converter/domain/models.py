@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -29,16 +29,9 @@ class ConvertedValue:
     value: float
 
 
-@dataclass
+@dataclass(frozen=True)
 class ConversionResult:
     """FR-02: Full conversion output for a single input quantity."""
 
     source: Quantity
-    values: list[ConvertedValue] = field(default_factory=list)
-
-    DEFAULT_DECIMAL_PLACES: int = 1
-
-    def rounded_value(self, value: float, places: int | None = None) -> float:
-        """FR-11: Round for display (README example uses one decimal place)."""
-        places = self.DEFAULT_DECIMAL_PLACES if places is None else places
-        return round(value, places)
+    values: tuple[ConvertedValue, ...] = ()

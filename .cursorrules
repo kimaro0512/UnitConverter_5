@@ -49,8 +49,17 @@
 - docstring 첫 줄: `FR-xx:` 또는 `NFR-xx:`.
 - Track 2: 사용자 "Track 2" 또는 "Red 시작" 후만 `.py` 생성. Green: `docs/TRACK2-RED-ENTRY.md`.
 - Track 2 절차 Skill: `.cursor/skills/unitconverter-dual-track/` (`/unitconverter-dual-track` 또는 자동 감지).
+- Golden Master Rule: `.cursor/rules/golden-master.mdc` — boundary·golden 파일 작업 시.
+
+## Golden Master (Refactor·회귀)
+- **SSOT:** `docs/GOLDEN-MASTER.md` — 단일 baseline, 포맷, 갱신 절차.
+- **TC 1건:** `tests/test_golden_master.py::test_golden_master_all_scenarios` — **41 BCE** 스냅샷.
+- **파일 1개:** `tests/golden/unit_converter.approved.txt`.
+- **헬퍼:** `tests/_approval.py` · 빌더 `tests/golden_master_report.py`.
+- **갱신:** `UPDATE_GOLDEN=1` + Golden TC pytest만. **수동 편집 금지.**
+- **검증:** `UPDATE_GOLDEN` 없이 → **matched** + 전체 **42 passed**.
 
 ## AI 행동
 - **한국어.** TDD 시 선언: `Phase: Red|Green|Refactor` · `Layer: entity|control|boundary` · `Track: 1|2` · `FR-{xx}`.
 - **git commit/push/PR은 사용자 요청 시에만.**
-- 상시: `.cursor/rules/dual-track-tdd.mdc`, `docs/DUAL-TRACK-TDD.md`.
+- 상시: `.cursor/rules/dual-track-tdd.mdc`, `.cursor/rules/golden-master.mdc`, `docs/DUAL-TRACK-TDD.md`.

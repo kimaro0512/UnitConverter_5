@@ -5,6 +5,10 @@ class UnitConverterError(Exception):
     """Base exception for unit converter domain."""
 
 
+class RegistryKeyError(UnitConverterError):
+    """Storage lookup failed — not a user validation error (FR-10 via Validator)."""
+
+
 class ParseError(UnitConverterError):
     """FR-09: Input string could not be parsed."""
 
