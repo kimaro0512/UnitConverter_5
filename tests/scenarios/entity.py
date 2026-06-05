@@ -76,16 +76,15 @@ def collect_entity_blocks(
     )
 
     cubit = UnitDefinition(name="cubit", ratio_to_base=0.4572)
-    empty_registry.register(cubit)
+    registry = empty_registry.register(cubit)
     blocks.append(
         block(
             "test_entity_FR06_registry_stores_cubit",
-            f"has_cubit={empty_registry.has_unit('cubit')}",
+            f"has_cubit={registry.has_unit('cubit')}",
         )
     )
 
-    reg = UnitRegistry(base_unit="meter")
-    reg.register_many(
+    reg = UnitRegistry(base_unit="meter").register_many(
         [
             UnitDefinition(name="meter", ratio_to_base=1.0),
             UnitDefinition(name="cubit", ratio_to_base=0.4572),
@@ -101,7 +100,9 @@ def collect_entity_blocks(
         )
     )
 
-    rounded = sample_conversion_result.rounded_value(8.2021)
+    from unit_converter.output.rounding import round_for_display
+
+    rounded = round_for_display(8.2021)
     blocks.append(
         block(
             "test_entity_FR11_rounding_policy_one_decimal",

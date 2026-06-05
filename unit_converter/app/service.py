@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from unit_converter.conversion.engine import ConversionEngine
+from unit_converter.conversion.registry import UnitRegistry
 from unit_converter.conversion.protocols import UnitRegistryPort
 from unit_converter.domain.models import ConversionResult
 from unit_converter.input.parser import parse_unit_value
@@ -31,9 +32,14 @@ class ConversionService:
         return self._engine.convert(quantity)
 
     def register_unit(self, registration: str) -> None:
-        """FR-06: Register a new unit from a registration string."""
+        """FR-06: Register a new unit; rebind engine/validator to updated registry."""
         definition = parse_unit_registration(registration)
-        self._registry.register(definition)
+        if not isinstance(self._registry, UnitRegistry):
+            raise TypeError("register_unit requires UnitRegistry")
+        new_registry = self._registry.register(definition)
+        self._registry = new_registry
+        self._engine = ConversionEngine(new_registry)
+        self._validator = InputValidator(new_registry)
 
     def format_result(
         self,

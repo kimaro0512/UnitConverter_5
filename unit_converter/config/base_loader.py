@@ -16,8 +16,7 @@ def registry_from_config(data: dict[str, Any]) -> UnitRegistry:
         UnitDefinition(name=name, ratio_to_base=ratio)
         for name, ratio in data["units"].items()
     ]
-    registry.register_many(definitions)
-    return registry
+    return registry.register_many(definitions)
 
 
 class BaseFileConfigLoader:
