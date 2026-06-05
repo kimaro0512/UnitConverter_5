@@ -1,0 +1,56 @@
+# UnitConverter_5 — Cursor Rules
+
+## 도메인 (PRD)
+- 길이 단위 변환 CLI를 PRD(README)와 테스트로부터 **추적 가능하게** 재구현한다.
+- 입력: `단위:값` (예: `meter:2.5`). 기본 단위: meter, feet, yard.
+- 비율: `1m = 3.28084 ft`, `1m = 1.09361 yd` — feet↔yard는 **meter hub 경유** (SSOT: `config/units.json`).
+- 목표 CLI: `python -m unit_converter "meter:2.5"` → `2.5 meter = 8.2021 feet`, `2.5 meter = 2.7340 yard` …
+- P1 추가: FR-05 설정 로드, FR-06 동적 등록, FR-07 `--format json|csv|table`.
+- 레거시 `UnitConverter.py`는 시드 참고만; 목표는 `unit_converter/` + `tests/`.
+
+## 레거시 시드 — 금지 패턴
+- `if/elif` 단위 분기 (NFR-01/OCP 위반) → registry + engine.
+- `3.28084`/`1.09361` 코드·테스트 산재 (NFR-06) → `config/units.json`만.
+- `main()` 파싱·변환·출력 혼재 (NFR-02/SRP) → ECB 분리.
+- FR-08~10 미검증(음수·형식·미등록 단위) → Red TC로 보완.
+- `split(':', 1)`만으로 `meter:2.5:extra`·`meter` 단독 미처리 (FR-09).
+
+## 아키텍처 (ECB = BCE)
+- **Entity** (domain, conversion) ← **Control** (service, validator) ← **Boundary** (cli, parser, loaders, formatters).
+- 의존: `boundary → control → entity` 만. **entity → control/boundary import 금지.**
+- Entity/Control: I/O·Domain Mock 금지. Boundary: stdin/stdout·파일·subprocess·Mock 허용.
+- 요구 ID SSOT: **FR-01~11, NFR-01~06** (`docs/ARCHITECTURE.md` §3).
+
+## 상세 FR 추적 (P0 우선)
+| ID | Given → Then | BCE |
+|----|--------------|-----|
+| FR-01 | `meter:2.5` → Quantity(meter, 2.5) | Boundary |
+| FR-02 | meter 2.5 → 전 단위 변환 (feet≈8.2021, yard≈2.7340) | Entity, Control, Boundary |
+| FR-03 | default registry → meter/feet/yard | Entity |
+| FR-04 | meter 1.0 → feet≈3.28084, yard≈1.09361 (hub) ⭐ Red 첫 후보 | Entity |
+| FR-05 | units.json/yaml → 비율 로드 | Boundary |
+| FR-06 | `1 cubit = 0.4572 meter` → 즉시 변환 | Entity, Boundary |
+| FR-07 | `--format` → json/csv/table | Boundary |
+| FR-08 | `meter:-1` → ValidationError | Control |
+| FR-09 | `meter` / `abc` / `meter:2.5:extra` → ParseError | Boundary |
+| FR-10 | `cubit:1` 미등록 → UnknownUnitError | Control |
+| FR-11 | 8.2021 → 표시 `8.2` (1자리 반올림) | Entity, Boundary |
+
+매트릭스: `tests/traceability/REQ_TRACEABILITY.md`, `BCE-TC-DESIGN.md`.
+
+## Dual Track & TDD
+| Track | 허용 | 금지 |
+|-------|------|------|
+| 1 Discovery (기본) | FR/NFR·BCE TC 설계·markdown SPEC | `tests/**/*.py`, `unit_converter/` 구현 |
+| 2 Delivery | Red → Green → Refactor | SPEC 임의 변경, FR-ID 없는 코드 |
+
+- 사이클: **RED → GREEN → REFACTOR**. assert 완화·skip·xfail·테스트 삭제로 Green 금지.
+- 명명: `test_{entity|control|boundary}_{FRxx}_{snake_case}` / `test_{entity|control|boundary}_{NFRxx}_{snake_case}`.
+- docstring 첫 줄: `FR-xx:` 또는 `NFR-xx:`.
+- Track 2: 사용자 "Track 2" 또는 "Red 시작" 후만 `.py` 생성. Green: `docs/TRACK2-RED-ENTRY.md`.
+- Track 2 절차 Skill: `.cursor/skills/unitconverter-dual-track/` (`/unitconverter-dual-track` 또는 자동 감지).
+
+## AI 행동
+- **한국어.** TDD 시 선언: `Phase: Red|Green|Refactor` · `Layer: entity|control|boundary` · `Track: 1|2` · `FR-{xx}`.
+- **git commit/push/PR은 사용자 요청 시에만.**
+- 상시: `.cursor/rules/dual-track-tdd.mdc`, `docs/DUAL-TRACK-TDD.md`.

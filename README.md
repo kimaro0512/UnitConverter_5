@@ -17,8 +17,12 @@ venv\Scripts\activate
 # 가상환경 활성화 (macOS/Linux)
 source venv/bin/activate
 
-# 실행
+# 레거시 실행 (시드)
 python UnitConverter.py
+
+# 목표 CLI (재구현 후)
+python -m unit_converter "meter:2.5"
+python -m unit_converter "meter:2.5" --format json
 
 # 가상환경 비활성화
 deactivate
@@ -29,11 +33,16 @@ deactivate
    ```
    meter:2.5
    ```
-   → 출력:
+   → 출력 (정밀 계산 예):
+   ```
+   2.5 meter = 8.2021 feet
+   2.5 meter = 2.7340 yard
+   ...
+   ```
+   → 표시 반올림 예 (FR-11):
    ```
    2.5 meter = 8.2 feet
    2.5 meter = 2.7 yard
-   ...
    ```
 
 2. 현재 지원 단위:
@@ -60,8 +69,8 @@ deactivate
    - 변환 비율을 외부 설정 파일(JSON/YAML)에서 로드
 - **동적으로 단위와 비율을 등록할 수 있도록 한다**
    - 사용자 입력으로 `1 cubit = 0.4572 meter`를 등록하고 사용 가능
-- **출력 포맷 선택 기능** 
-   - JSON / CSV / 표 형태 출력
+- **출력 포맷 선택 기능**
+   - CLI `--format json|csv|table` (기본: text)
 
 
 ## 생성형AI를 활용한 Activities (6 시간)

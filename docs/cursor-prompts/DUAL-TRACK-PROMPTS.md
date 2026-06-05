@@ -2,6 +2,9 @@
 
 복사 후 `@파일` 참조와 함께 사용. **SPEC 단계**는 Track 1·준비만.
 
+> Track 2 Red/Green **절차·Green 범위**: `.cursor/skills/unitconverter-dual-track/` (Skill)  
+> 상시 **제약**: `.cursor/rules/dual-track-tdd.mdc` (Rule)
+
 ---
 
 ## 예시 1 — Track 1: BCE TC 설계 (코드 금지)

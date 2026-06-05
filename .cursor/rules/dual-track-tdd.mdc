@@ -5,6 +5,12 @@ alwaysApply: true
 
 # Dual Track TDD (UnitConverter_5)
 
+## ID SSOT (상세)
+
+- 요구 ID: **FR-01~11, NFR-01~06** (`docs/ARCHITECTURE.md` §3).
+- 워크샵 슬라이드 축약 ID(EXT-*, D-/U-*)는 **사용하지 않음** — 상세 ID만 코드·TC·문서에 기록.
+- 추적: `tests/traceability/REQ_TRACEABILITY.md`, `BCE-TC-DESIGN.md`.
+
 ## 현재 단계 (기본)
 
 - **SPEC / Red 준비:** TC 설계, 추적성, Cursor 프롬프트, 디렉터리 구조만.
@@ -18,26 +24,33 @@ alwaysApply: true
 | **1** | Discovery | FR/NFR, BCE TC 설계, markdown SPEC | production/test `.py` |
 | **2** | Delivery | Red → Green → Refactor | SPEC 문서 임의 변경, FR-ID 없는 코드 |
 
-## BCE + 테스트 경로
+## ECB (BCE) + 테스트 경로
 
-| BCE | 디렉터리 | 대상 |
-|-----|----------|------|
-| Entity | `tests/entity/` | Engine, Registry, Domain (I/O 없음) |
-| Control | `tests/control/` | Service, Validator 조율 (stdin/stdout mock 금지) |
-| Boundary | `tests/boundary/` | CLI, config loader, formatter, subprocess |
+| BCE | 디렉터리 | 대상 | Mock |
+|-----|----------|------|------|
+| Entity | `tests/entity/` | Engine, Registry, Domain (I/O 없음) | 금지 |
+| Control | `tests/control/` | Service, Validator (stdin/stdout mock 금지) | 금지 |
+| Boundary | `tests/boundary/` | CLI, parser, loaders, formatters, subprocess | 허용 |
+
+의존: `boundary → control → entity`. entity → 상위 레이어 import 금지.
 
 ## 명명 규칙
 
 ```
 test_{entity|control|boundary}_{FRxx}_{snake_case}
+test_{entity|control|boundary}_{NFRxx}_{snake_case}
 ```
 
 - docstring 첫 줄: `FR-xx:` 또는 `NFR-xx:`
-- 상세 설계: `tests/traceability/BCE-TC-DESIGN.md`
+- 상세 Given/When/Then: `tests/traceability/BCE-TC-DESIGN.md`
+
+## TDD
+
+- **RED → GREEN → REFACTOR** 엄수.
+- assert 완화, `@pytest.mark.skip`, `xfail`, 테스트 삭제로 Green **금지**.
+- MagicConstant: `3.28084`/`1.09361` 등 비율 리터럴은 `config/units.json` SSOT (NFR-06).
 
 ## Track 2 Agent 프롬프트 (Red/Green 시)
-
-항상 포함:
 
 ```
 Dual Track 2. BCE={entity|control|boundary} only. FR-{xx} one item.
@@ -58,6 +71,8 @@ Red 통과를 위한 **첫 Green** 허용 파일만:
 
 ## 참고 문서
 
+- `.cursorrules` (루트 요약)
+- `.cursor/skills/unitconverter-dual-track/` — Track 2 Red/Green/Refactor **절차** Skill
 - `docs/DUAL-TRACK-TDD.md`
 - `docs/TRACK2-RED-ENTRY.md`
 - `docs/cursor-prompts/DUAL-TRACK-PROMPTS.md`
