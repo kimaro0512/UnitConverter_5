@@ -1,0 +1,63 @@
+---
+description: Dual Track TDD + BCE — SPEC 단계 vs Red/Green 단계 구분
+alwaysApply: true
+---
+
+# Dual Track TDD (UnitConverter_5)
+
+## 현재 단계 (기본)
+
+- **SPEC / Red 준비:** TC 설계, 추적성, Cursor 프롬프트, 디렉터리 구조만.
+- **`tests/**/*.py` 생성 금지** — 사용자가 "Track 2", "Red 시작"이라고 명시할 때까지.
+- **`unit_converter/` 구현 금지** — 동일 조건까지.
+
+## Track 구분
+
+| Track | 이름 | 허용 | 금지 |
+|-------|------|------|------|
+| **1** | Discovery | FR/NFR, BCE TC 설계, markdown SPEC | production/test `.py` |
+| **2** | Delivery | Red → Green → Refactor | SPEC 문서 임의 변경, FR-ID 없는 코드 |
+
+## BCE + 테스트 경로
+
+| BCE | 디렉터리 | 대상 |
+|-----|----------|------|
+| Entity | `tests/entity/` | Engine, Registry, Domain (I/O 없음) |
+| Control | `tests/control/` | Service, Validator 조율 (stdin/stdout mock 금지) |
+| Boundary | `tests/boundary/` | CLI, config loader, formatter, subprocess |
+
+## 명명 규칙
+
+```
+test_{entity|control|boundary}_{FRxx}_{snake_case}
+```
+
+- docstring 첫 줄: `FR-xx:` 또는 `NFR-xx:`
+- 상세 설계: `tests/traceability/BCE-TC-DESIGN.md`
+
+## Track 2 Agent 프롬프트 (Red/Green 시)
+
+항상 포함:
+
+```
+Dual Track 2. BCE={entity|control|boundary} only. FR-{xx} one item.
+Do not modify SPEC docs unless asked.
+```
+
+## Green 범위 (예시 3 — FR-04 Entity)
+
+Red 통과를 위한 **첫 Green** 허용 파일만:
+
+- `unit_converter/domain/models.py`
+- `unit_converter/domain/exceptions.py`
+- `unit_converter/conversion/registry.py`
+- `unit_converter/conversion/engine.py`
+- `config/units.json`
+
+금지: `cli.py`, `parser.py`, formatters, loaders (해당 FR 범위 밖)
+
+## 참고 문서
+
+- `docs/DUAL-TRACK-TDD.md`
+- `docs/TRACK2-RED-ENTRY.md`
+- `docs/cursor-prompts/DUAL-TRACK-PROMPTS.md`

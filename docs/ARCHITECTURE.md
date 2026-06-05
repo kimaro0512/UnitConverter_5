@@ -59,15 +59,23 @@ UnitConverter_5/
 │       └── cli.py                 # stdin/stdout, 포맷·설정 경로 CLI 옵션
 │
 ├── tests/
-│   ├── unit/                    # (예약) TC 코드 — SPEC 단계, 아직 비어 있음
-│   ├── integration/             # (예약) TC 코드 — SPEC 단계, 아직 비어 있음
+│   ├── entity/                  # BCE Entity — README only (SPEC)
+│   ├── control/                 # BCE Control — README only (SPEC)
+│   ├── boundary/                # BCE Boundary — README only (SPEC)
 │   └── traceability/
-│       └── REQ_TRACEABILITY.md  # TC 설계·FR/NFR 추적 (코드 없음)
+│       ├── REQ_TRACEABILITY.md
+│       └── BCE-TC-DESIGN.md
 │
 └── docs/
-    ├── ARCHITECTURE.md            # 본 문서
-    └── (LEGACY-SMELLS-AND-PRD-GAP.md는 repo root 참고)
+    ├── ARCHITECTURE.md
+    ├── DUAL-TRACK-TDD.md        # Dual Track + BCE 가이드 (§1~10)
+    ├── TRACK2-RED-ENTRY.md      # Red Gate · 예시3 Green 범위
+    ├── pyproject.toml.spec      # Track 2 Day1 템플릿
+    └── cursor-prompts/
+        └── DUAL-TRACK-PROMPTS.md
 ```
+
+> **Dual Track SPEC:** [DUAL-TRACK-TDD.md](./DUAL-TRACK-TDD.md) · Red 준비: [TRACK2-RED-ENTRY.md](./TRACK2-RED-ENTRY.md)
 
 ---
 
