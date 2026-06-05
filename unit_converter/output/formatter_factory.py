@@ -16,6 +16,11 @@ _FORMATTERS: dict[str, type[OutputFormatter]] = {
 }
 
 
+def register_formatter(name: str, formatter_cls: type[OutputFormatter]) -> None:
+    """OCP: Register an output formatter without editing built-in map."""
+    _FORMATTERS[name] = formatter_cls
+
+
 def registered_format_names() -> list[str]:
     """Return all supported output format names."""
     return sorted(_FORMATTERS.keys())

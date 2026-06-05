@@ -7,7 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tests._approval import format_golden_cli, format_golden_error
+from tests._approval import format_golden_cli, format_golden_error_code
+from unit_converter.domain.error_codes import ErrorCode
 from tests.scenarios.helpers import block, exc_name, float_text
 from unit_converter.config.json_loader import JsonConfigLoader
 from unit_converter.config.loader_factory import resolve_config_loader
@@ -60,9 +61,9 @@ def collect_boundary_blocks(
         )
     )
 
-    for cli_args, test_name, error in (
-        (["meter:-1"], "test_boundary_FR08_cli_negative_exit_nonzero", ("E008", "NEGATIVE_VALUE")),
-        (["mile:1"], "test_boundary_FR10_cli_unknown_unit", ("E010", "UNKNOWN_UNIT")),
+    for cli_args, test_name, error_code in (
+        (["meter:-1"], "test_boundary_FR08_cli_negative_exit_nonzero", ErrorCode.NEGATIVE_VALUE),
+        (["mile:1"], "test_boundary_FR10_cli_unknown_unit", ErrorCode.UNKNOWN_UNIT),
     ):
         completed = subprocess.run(
             [sys.executable, "-m", "unit_converter", *cli_args],
@@ -78,7 +79,7 @@ def collect_boundary_blocks(
                     completed.returncode,
                     completed.stdout,
                     completed.stderr,
-                    error=error,
+                    error=(error_code.code, error_code.name_label),
                 ),
             )
         )
@@ -179,7 +180,7 @@ def collect_boundary_blocks(
         blocks.append(
             block(
                 name,
-                format_golden_error("E009", "PARSE_ERROR"),
+                format_golden_error_code(ErrorCode.PARSE_ERROR),
                 exc_name(lambda r=raw: parse_unit_value(r), ParseError),
             )
         )

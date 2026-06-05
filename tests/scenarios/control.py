@@ -6,7 +6,8 @@ import inspect
 import json
 from pathlib import Path
 
-from tests._approval import format_golden_error
+from tests._approval import format_golden_error_code
+from unit_converter.domain.error_codes import ErrorCode
 from tests.scenarios.helpers import block, exc_name, float_text
 from unit_converter.config.json_loader import JsonConfigLoader
 from unit_converter.domain.exceptions import (
@@ -31,7 +32,7 @@ def collect_control_blocks(
     blocks.append(
         block(
             "test_control_FR08_reject_negative_value",
-            format_golden_error("E008", "NEGATIVE_VALUE"),
+            format_golden_error_code(ErrorCode.NEGATIVE_VALUE),
             exc_name(
                 lambda: validator.validate(Quantity(unit="meter", value=-1.0)),
                 ValidationError,
@@ -44,7 +45,7 @@ def collect_control_blocks(
     blocks.append(
         block(
             "test_control_FR10_reject_unknown_unit",
-            format_golden_error("E010", "UNKNOWN_UNIT"),
+            format_golden_error_code(ErrorCode.UNKNOWN_UNIT),
             exc_name(
                 lambda: validator.validate(Quantity(unit="mile", value=1.0)),
                 UnknownUnitError,
@@ -54,7 +55,7 @@ def collect_control_blocks(
     blocks.append(
         block(
             "test_control_FR10_reject_unregistered_cubit",
-            format_golden_error("E010", "UNKNOWN_UNIT"),
+            format_golden_error_code(ErrorCode.UNKNOWN_UNIT),
             exc_name(
                 lambda: validator.validate(Quantity(unit="cubit", value=1.0)),
                 UnknownUnitError,
@@ -102,7 +103,7 @@ def collect_control_blocks(
     blocks.append(
         block(
             "test_control_FR09_service_invalid_format",
-            format_golden_error("E009", "PARSE_ERROR"),
+            format_golden_error_code(ErrorCode.PARSE_ERROR),
             exc_name(
                 lambda: conversion_service.convert_input("invalid"),
                 ParseError,

@@ -33,7 +33,7 @@ class ConversionService:
 
     def register_unit(self, registration: str) -> None:
         """FR-06: Register a new unit; rebind engine/validator to updated registry."""
-        definition = parse_unit_registration(registration)
+        definition = parse_unit_registration(registration, self._registry.base_unit)
         if not isinstance(self._registry, UnitRegistry):
             raise TypeError("register_unit requires UnitRegistry")
         new_registry = self._registry.register(definition)

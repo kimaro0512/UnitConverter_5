@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -29,9 +29,9 @@ class ConvertedValue:
     value: float
 
 
-@dataclass
+@dataclass(frozen=True)
 class ConversionResult:
     """FR-02: Full conversion output for a single input quantity."""
 
     source: Quantity
-    values: list[ConvertedValue] = field(default_factory=list)
+    values: tuple[ConvertedValue, ...] = ()

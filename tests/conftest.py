@@ -72,7 +72,7 @@ def sample_conversion_result():
         ConvertedValue(unit="feet", value=8.2021),
         ConvertedValue(unit="yard", value=2.7340),
     ]
-    return ConversionResult(source=source, values=values)
+    return ConversionResult(source=source, values=tuple(values))
 
 
 @pytest.fixture

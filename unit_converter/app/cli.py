@@ -1,4 +1,4 @@
-"""CLI entry point (FR-02, FR-07, FR-08, FR-10)."""
+"""CLI entry point (FR-02, FR-06, FR-07, FR-08, FR-10)."""
 
 from __future__ import annotations
 
@@ -52,14 +52,27 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Path to units config (JSON or YAML)",
     )
+    parser.add_argument(
+        "--register",
+        metavar="SPEC",
+        help="Register unit before convert (e.g. '1 cubit = 0.4572 meter')",
+    )
     args = parser.parse_args(argv)
 
-    if not args.input:
-        print("Usage: unit-converter unit:value [--format text|json|csv|table]", file=sys.stderr)
+    if not args.input and not args.register:
+        print(
+            "Usage: unit-converter unit:value [--register '1 cubit = 0.4572 meter'] "
+            "[--format text|json|csv|table]",
+            file=sys.stderr,
+        )
         return 1
 
     try:
         service = _build_service(args.config)
+        if args.register:
+            service.register_unit(args.register)
+        if not args.input:
+            return 0
         result = service.convert_input(args.input)
         formatter = get_formatter(args.format)
         print(service.format_result(result, formatter))

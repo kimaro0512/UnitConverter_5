@@ -29,6 +29,11 @@ def format_golden_error(code: str, name: str) -> str:
     return f"{code} {name}"
 
 
+def format_golden_error_code(error_code) -> str:
+    """Format from domain.error_codes.ErrorCode enum."""
+    return format_golden_error(error_code.code, error_code.name_label)
+
+
 def format_golden_cli(
     exit_code: int,
     stdout: str = "",
