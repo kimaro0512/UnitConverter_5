@@ -73,6 +73,7 @@ Red 통과를 위한 **첫 Green** 허용 파일만:
 
 - `.cursorrules` (루트 요약)
 - `.cursor/skills/unitconverter-dual-track/` — Track 2 Red/Green/Refactor **절차** Skill
+- `.cursor/rules/golden-master.mdc` — Golden Master baseline (Refactor·boundary)
 - `docs/DUAL-TRACK-TDD.md`
 - `docs/TRACK2-RED-ENTRY.md`
 - `docs/cursor-prompts/DUAL-TRACK-PROMPTS.md`

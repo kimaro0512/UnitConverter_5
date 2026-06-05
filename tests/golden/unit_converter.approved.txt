@@ -1,0 +1,158 @@
+[test_boundary_FR01_parse_trims_whitespace]
+unit=meter
+value=2.500000
+
+[test_boundary_FR01_parse_valid_unit_value]
+unit=meter
+value=2.500000
+
+[test_boundary_FR02_cli_stdout_contains_feet]
+0
+2.5 meter = 8.2 feet
+2.5 meter = 2.7 yard
+
+[test_boundary_FR02_legacy_parity]
+exit=0
+feet=8.202100
+
+[test_boundary_FR03_config_json_lists_three_units]
+count=3
+
+[test_boundary_FR05_load_units_from_json]
+has_feet=True
+
+[test_boundary_FR05_load_units_from_yaml]
+has_yard=True
+
+[test_boundary_FR05_missing_file_raises]
+FileNotFoundError
+
+[test_boundary_FR06_parse_register_cubit]
+name=cubit
+ratio=0.457200
+
+[test_boundary_FR07_csv_format]
+unit,value
+meter,2.5
+feet,8.2021
+yard,2.734
+
+[test_boundary_FR07_factory_all_formats]
+names=csv,json,table,text
+
+[test_boundary_FR07_json_format]
+{"source": {"unit": "meter", "value": 2.5}, "values": [{"unit": "meter", "value": 2.5}, {"unit": "feet", "value": 8.2021}, {"unit": "yard", "value": 2.734}]}
+
+[test_boundary_FR07_table_format]
+unit    | value
+--------+--------
+meter   | 2.5
+feet    | 8.2021
+yard    | 2.734
+
+[test_boundary_FR08_cli_negative_exit_nonzero]
+1
+E008 NEGATIVE_VALUE
+Negative value not allowed: -1.0
+
+[test_boundary_FR09_reject_bare_non_unit]
+E009 PARSE_ERROR
+ParseError
+
+[test_boundary_FR09_reject_bare_unit]
+E009 PARSE_ERROR
+ParseError
+
+[test_boundary_FR09_reject_extra_colon]
+E009 PARSE_ERROR
+ParseError
+
+[test_boundary_FR09_reject_missing_colon]
+E009 PARSE_ERROR
+ParseError
+
+[test_boundary_FR09_reject_non_numeric]
+E009 PARSE_ERROR
+ParseError
+
+[test_boundary_FR10_cli_unknown_unit]
+1
+E010 UNKNOWN_UNIT
+Unknown unit: mile
+
+[test_boundary_FR11_text_output_one_decimal]
+2.5 meter = 8.2 feet
+2.5 meter = 2.7 yard
+
+[test_control_FR02_service_convert_input]
+unit=meter
+value=2.500000
+
+[test_control_FR02_service_returns_all_unit_values]
+units=feet,meter,yard
+
+[test_control_FR06_service_register_and_convert]
+units=cubit,feet,meter,yard
+
+[test_control_FR07_service_format_json]
+source_unit=meter
+feet_in_output=true
+
+[test_control_FR08_reject_negative_value]
+E008 NEGATIVE_VALUE
+ValidationError
+
+[test_control_FR08_zero_allowed]
+OK
+
+[test_control_FR09_service_invalid_format]
+E009 PARSE_ERROR
+ParseError
+
+[test_control_FR10_reject_unknown_unit]
+E010 UNKNOWN_UNIT
+UnknownUnitError
+
+[test_control_FR10_reject_unregistered_cubit]
+E010 UNKNOWN_UNIT
+UnknownUnitError
+
+[test_control_NFR05_no_stdin_mock]
+stdin=False
+parse_unit_value=True
+
+[test_entity_FR02_convert_to_all_registered_units]
+feet=8.202100
+yard=2.734025
+
+[test_entity_FR02_feet_input_converts_to_meter]
+meter=2.500000
+
+[test_entity_FR03_default_units_in_registry]
+units=feet,meter,yard
+
+[test_entity_FR04_feet_yard_cross_consistent]
+ratio=0.333332
+
+[test_entity_FR04_meter_hub_converts_to_feet_and_yard]
+feet=3.280840
+yard=1.093610
+
+[test_entity_FR06_cubit_in_conversion_output]
+units=cubit,meter
+
+[test_entity_FR06_registry_stores_cubit]
+has_cubit=True
+
+[test_entity_FR11_rounding_policy_one_decimal]
+rounded=8.200000
+
+[test_entity_NFR01_engine_no_unit_branch]
+elif_unit=False
+feet_eq=False
+yard_eq=False
+meter_eq=False
+
+[test_entity_NFR06_engine_no_magic_numbers]
+ratio_feet=False
+ratio_yard=False
