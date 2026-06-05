@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from unit_converter.app.service import ConversionService
+from unit_converter.paths import DEFAULT_UNITS_CONFIG
 from unit_converter.config.loader_factory import resolve_config_loader
 from unit_converter.config.protocols import ConfigLoader
 from unit_converter.conversion.engine import ConversionEngine
@@ -20,15 +21,11 @@ from unit_converter.input.validator import InputValidator
 from unit_converter.output.formatter_factory import get_formatter
 
 
-def _default_config_path() -> Path:
-    return Path(__file__).resolve().parent.parent.parent / "config" / "units.json"
-
-
 def _build_service(
     config_path: Path | None = None,
     loader: ConfigLoader | None = None,
 ) -> ConversionService:
-    path = config_path or _default_config_path()
+    path = config_path or DEFAULT_UNITS_CONFIG
     config_loader = loader or resolve_config_loader(path)
     registry = config_loader.load(path)
     engine = ConversionEngine(registry)

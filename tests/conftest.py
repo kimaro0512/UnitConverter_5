@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
@@ -14,10 +13,9 @@ from unit_converter.conversion.engine import ConversionEngine
 from unit_converter.conversion.registry import UnitRegistry
 from unit_converter.domain.models import ConversionResult, ConvertedValue, Quantity
 from unit_converter.input.validator import InputValidator
+from unit_converter.paths import PROJECT_ROOT
 
-ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+ROOT = PROJECT_ROOT
 
 
 @pytest.fixture
@@ -67,12 +65,12 @@ def conversion_service(default_registry, engine):
 @pytest.fixture
 def sample_conversion_result():
     source = Quantity(unit="meter", value=2.5)
-    values = [
+    values = (
         ConvertedValue(unit="meter", value=2.5),
         ConvertedValue(unit="feet", value=8.2021),
         ConvertedValue(unit="yard", value=2.7340),
-    ]
-    return ConversionResult(source=source, values=tuple(values))
+    )
+    return ConversionResult(source=source, values=values)
 
 
 @pytest.fixture
