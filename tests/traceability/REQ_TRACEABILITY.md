@@ -47,7 +47,7 @@ BCE 설계: [BCE-TC-DESIGN.md](./BCE-TC-DESIGN.md)
 | FR-02 | Control | service 변환 | `app/service.py` | `tests/control/test_conversion_service.py` | `test_control_FR02_service_convert_input` | designed |
 | FR-02 | Boundary | CLI stdout | `app/cli.py` | `tests/boundary/test_cli.py` | `test_boundary_FR02_cli_stdout_contains_feet` | designed |
 | FR-03 | Entity | 3단위 registry | `registry`, `config/units.json` | `tests/entity/test_conversion_engine.py` | `test_entity_FR03_default_units_in_registry` | designed |
-| FR-04 | Entity | meter hub ⭐ | `conversion/engine.py` | `tests/entity/test_conversion_engine.py` | `test_entity_FR04_meter_hub_converts_to_feet_and_yard` | **red-ready** |
+| FR-04 | Entity | meter hub ⭐ | `conversion/engine.py` | `tests/entity/test_conversion_engine.py` | `test_entity_FR04_meter_hub_converts_to_feet_and_yard` | **green** |
 | FR-05 | Boundary | JSON 로드 | `config/json_loader.py` | `tests/boundary/test_config_loaders.py` | `test_boundary_FR05_load_units_from_json` | designed |
 | FR-05 | Boundary | YAML 로드 | `config/yaml_loader.py` | `tests/boundary/test_config_loaders.py` | `test_boundary_FR05_load_units_from_yaml` | designed |
 | FR-06 | Entity | cubit 등록 | `conversion/registry.py` | `tests/entity/test_registry.py` | `test_entity_FR06_registry_stores_cubit` | designed |
@@ -85,8 +85,8 @@ BCE 설계: [BCE-TC-DESIGN.md](./BCE-TC-DESIGN.md)
 |-------|------|--------|------|
 | 1 | Discovery | BCE-TC-DESIGN, 본 매트릭스, Cursor Rule | ✅ |
 | 1 | Red 준비 | TRACK2-RED-ENTRY, BCE README | ✅ |
-| 2 | Red | `tests/entity/test_conversion_engine.py` | ⬜ |
-| 2 | Green (예시3) | FR-04 engine only | ⬜ |
+| 2 | Red | `tests/entity/test_conversion_engine.py` FR-04 | ✅ |
+| 2 | Green (예시3) | FR-04 engine only | ✅ |
 
 ---
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 
@@ -15,18 +16,16 @@ def test_boundary_FR02_cli_stdout_contains_feet(
     # Given
     cmd = [sys.executable, "-m", "unit_converter", "meter:2.5"]
     # When
-    try:
-        completed = subprocess.run(
-            cmd,
-            cwd=project_root,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        completed = None
+    completed = subprocess.run(
+        cmd,
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
     # Then
-    pytest.fail("Red skeleton: returncode=0 and 'feet' in stdout")
+    assert completed.returncode == 0
+    assert "feet" in completed.stdout
 
 
 def test_boundary_FR02_legacy_parity(
@@ -37,19 +36,20 @@ def test_boundary_FR02_legacy_parity(
     cmd = [sys.executable, "UnitConverter.py"]
     stdin = "meter:2.5\n"
     # When
-    try:
-        completed = subprocess.run(
-            cmd,
-            cwd=project_root,
-            input=stdin,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        completed = None
+    completed = subprocess.run(
+        cmd,
+        cwd=project_root,
+        input=stdin,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
     # Then
-    pytest.fail("Red skeleton: legacy feet within ±0.1 of entity expectation")
+    assert completed.returncode == 0
+    match = re.search(r"=\s*([\d.]+)\s*feet", completed.stdout)
+    assert match is not None
+    feet = float(match.group(1))
+    assert feet == pytest.approx(8.2021, abs=0.1)
 
 
 def test_boundary_FR08_cli_negative_exit_nonzero(
@@ -59,18 +59,15 @@ def test_boundary_FR08_cli_negative_exit_nonzero(
     # Given
     cmd = [sys.executable, "-m", "unit_converter", "meter:-1"]
     # When
-    try:
-        completed = subprocess.run(
-            cmd,
-            cwd=project_root,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        completed = None
+    completed = subprocess.run(
+        cmd,
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
     # Then
-    pytest.fail("Red skeleton: non-zero exit or error for meter:-1")
+    assert completed.returncode != 0
 
 
 def test_boundary_FR10_cli_unknown_unit(
@@ -80,15 +77,12 @@ def test_boundary_FR10_cli_unknown_unit(
     # Given
     cmd = [sys.executable, "-m", "unit_converter", "mile:1"]
     # When
-    try:
-        completed = subprocess.run(
-            cmd,
-            cwd=project_root,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        completed = None
+    completed = subprocess.run(
+        cmd,
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
     # Then
-    pytest.fail("Red skeleton: error output and no conversion for mile:1")
+    assert completed.returncode != 0
