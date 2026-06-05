@@ -4,23 +4,13 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
-from unit_converter.conversion.registry import UnitRegistry
-from unit_converter.domain.models import UnitDefinition
+from unit_converter.config.base_loader import BaseFileConfigLoader
 
 
-class JsonConfigLoader:
+class JsonConfigLoader(BaseFileConfigLoader):
     """Load unit definitions from a JSON config file."""
 
-    def load(self, path: Path) -> UnitRegistry:
-        """FR-05: Build a registry from ``units.json``."""
-        if not path.is_file():
-            raise FileNotFoundError(f"Config file not found: {path}")
-        data = json.loads(path.read_text(encoding="utf-8"))
-        registry = UnitRegistry(base_unit=data["base_unit"])
-        definitions = [
-            UnitDefinition(name=name, ratio_to_base=ratio)
-            for name, ratio in data["units"].items()
-        ]
-        registry.register_many(definitions)
-        return registry
+    def _parse(self, path: Path) -> dict[str, Any]:
+        return json.loads(path.read_text(encoding="utf-8"))

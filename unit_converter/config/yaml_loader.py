@@ -3,25 +3,15 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import yaml
 
-from unit_converter.conversion.registry import UnitRegistry
-from unit_converter.domain.models import UnitDefinition
+from unit_converter.config.base_loader import BaseFileConfigLoader
 
 
-class YamlConfigLoader:
+class YamlConfigLoader(BaseFileConfigLoader):
     """Load unit definitions from a YAML config file."""
 
-    def load(self, path: Path) -> UnitRegistry:
-        """FR-05: Build a registry from ``units.yaml``."""
-        if not path.is_file():
-            raise FileNotFoundError(f"Config file not found: {path}")
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        registry = UnitRegistry(base_unit=data["base_unit"])
-        definitions = [
-            UnitDefinition(name=name, ratio_to_base=ratio)
-            for name, ratio in data["units"].items()
-        ]
-        registry.register_many(definitions)
-        return registry
+    def _parse(self, path: Path) -> dict[str, Any]:
+        return yaml.safe_load(path.read_text(encoding="utf-8"))

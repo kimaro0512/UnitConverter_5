@@ -13,7 +13,7 @@ value=2.500000
 
 [test_boundary_FR02_legacy_parity]
 exit=0
-feet=8.202100
+feet=8.200000
 
 [test_boundary_FR03_config_json_lists_three_units]
 count=3

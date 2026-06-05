@@ -1,4 +1,4 @@
-"""Shared pytest fixtures for BCE Red skeleton (Track 2)."""
+"""Shared pytest fixtures for BCE tests (Track 2)."""
 
 from __future__ import annotations
 
@@ -8,28 +8,16 @@ from pathlib import Path
 
 import pytest
 
+from unit_converter.app.service import ConversionService
+from unit_converter.config.json_loader import JsonConfigLoader
+from unit_converter.conversion.engine import ConversionEngine
+from unit_converter.conversion.registry import UnitRegistry
+from unit_converter.domain.models import ConversionResult, ConvertedValue, Quantity
+from unit_converter.input.validator import InputValidator
+
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-
-DEFAULT_UNITS_CONFIG = {
-    "base_unit": "meter",
-    "units": {"meter": 1.0, "feet": 3.28084, "yard": 1.09361},
-}
-
-
-def build_registry(base_unit: str, units: dict[str, float]):
-    """Test helper: populate registry via production register_many."""
-    from unit_converter.conversion.registry import UnitRegistry
-    from unit_converter.domain.models import UnitDefinition
-
-    registry = UnitRegistry(base_unit=base_unit)
-    definitions = [
-        UnitDefinition(name=name, ratio_to_base=ratio)
-        for name, ratio in units.items()
-    ]
-    registry.register_many(definitions)
-    return registry
 
 
 @pytest.fixture
@@ -49,69 +37,35 @@ def units_yaml_path(project_root: Path) -> Path:
 
 @pytest.fixture
 def units_config_data(units_json_path: Path) -> dict:
-    if units_json_path.is_file():
-        return json.loads(units_json_path.read_text(encoding="utf-8"))
-    return dict(DEFAULT_UNITS_CONFIG)
+    return json.loads(units_json_path.read_text(encoding="utf-8"))
 
 
 @pytest.fixture
-def default_registry(units_config_data: dict):
-    try:
-        return build_registry(units_config_data["base_unit"], units_config_data["units"])
-    except ModuleNotFoundError:
-        return None
+def default_registry(units_json_path: Path):
+    return JsonConfigLoader().load(units_json_path)
 
 
 @pytest.fixture
 def empty_registry():
-    try:
-        from unit_converter.conversion.registry import UnitRegistry
-
-        return UnitRegistry(base_unit="meter")
-    except ModuleNotFoundError:
-        return None
+    return UnitRegistry(base_unit="meter")
 
 
 @pytest.fixture
 def engine(default_registry):
-    if default_registry is None:
-        return None
-    try:
-        from unit_converter.conversion.engine import ConversionEngine
-
-        return ConversionEngine(default_registry)
-    except ModuleNotFoundError:
-        return None
+    return ConversionEngine(default_registry)
 
 
 @pytest.fixture
 def conversion_service(default_registry, engine):
-    if default_registry is None or engine is None:
-        return None
-    try:
-        from unit_converter.app.service import ConversionService
-        from unit_converter.input.validator import InputValidator
-
-        return ConversionService(
-            registry=default_registry,
-            engine=engine,
-            validator=InputValidator(default_registry),
-        )
-    except ModuleNotFoundError:
-        return None
+    return ConversionService(
+        registry=default_registry,
+        engine=engine,
+        validator=InputValidator(default_registry),
+    )
 
 
 @pytest.fixture
 def sample_conversion_result():
-    try:
-        from unit_converter.domain.models import (
-            ConversionResult,
-            ConvertedValue,
-            Quantity,
-        )
-    except ModuleNotFoundError:
-        return None
-
     source = Quantity(unit="meter", value=2.5)
     values = [
         ConvertedValue(unit="meter", value=2.5),

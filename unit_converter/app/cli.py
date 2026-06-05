@@ -7,7 +7,8 @@ import sys
 from pathlib import Path
 
 from unit_converter.app.service import ConversionService
-from unit_converter.config.json_loader import JsonConfigLoader
+from unit_converter.config.loader_factory import resolve_config_loader
+from unit_converter.config.protocols import ConfigLoader
 from unit_converter.conversion.engine import ConversionEngine
 from unit_converter.domain.exceptions import (
     ParseError,
@@ -23,9 +24,13 @@ def _default_config_path() -> Path:
     return Path(__file__).resolve().parent.parent.parent / "config" / "units.json"
 
 
-def _build_service(config_path: Path | None = None) -> ConversionService:
+def _build_service(
+    config_path: Path | None = None,
+    loader: ConfigLoader | None = None,
+) -> ConversionService:
     path = config_path or _default_config_path()
-    registry = JsonConfigLoader().load(path)
+    config_loader = loader or resolve_config_loader(path)
+    registry = config_loader.load(path)
     engine = ConversionEngine(registry)
     validator = InputValidator(registry)
     return ConversionService(registry=registry, engine=engine, validator=validator)
@@ -45,7 +50,7 @@ def main(argv: list[str] | None = None) -> int:
         "--config",
         type=Path,
         default=None,
-        help="Path to units config JSON",
+        help="Path to units config (JSON or YAML)",
     )
     args = parser.parse_args(argv)
 
