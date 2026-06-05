@@ -19,15 +19,16 @@ DEFAULT_UNITS_CONFIG = {
 
 
 def build_registry(base_unit: str, units: dict[str, float]):
-    """Test helper: populate registry without production register() (Red phase)."""
+    """Test helper: populate registry via production register_many."""
     from unit_converter.conversion.registry import UnitRegistry
     from unit_converter.domain.models import UnitDefinition
 
     registry = UnitRegistry(base_unit=base_unit)
-    registry._units = {
-        name: UnitDefinition(name, ratio)
+    definitions = [
+        UnitDefinition(name=name, ratio_to_base=ratio)
         for name, ratio in units.items()
-    }
+    ]
+    registry.register_many(definitions)
     return registry
 
 
@@ -89,8 +90,13 @@ def conversion_service(default_registry, engine):
         return None
     try:
         from unit_converter.app.service import ConversionService
+        from unit_converter.input.validator import InputValidator
 
-        return ConversionService(registry=default_registry, engine=engine)
+        return ConversionService(
+            registry=default_registry,
+            engine=engine,
+            validator=InputValidator(default_registry),
+        )
     except ModuleNotFoundError:
         return None
 

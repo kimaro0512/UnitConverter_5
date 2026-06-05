@@ -32,8 +32,8 @@
 | G2 | BCE TC 설계 (`BCE-TC-DESIGN.md`) | [x] |
 | G3 | BCE 디렉터리 README | [x] |
 | G4 | Cursor Rule (`.cursor/rules/dual-track-tdd.mdc`) | [x] |
-| G5 | `pyproject.toml` + `pip install -e ".[dev]"` (`docs/pyproject.toml.spec` 참고) | [ ] |
-| G6 | `unit_converter/` import 가능 스켈레톤 (Red용 NotImplemented 스텁) | [ ] |
+| G5 | `pyproject.toml` + `pip install -e ".[dev]"` (`docs/pyproject.toml.spec` 참고) | [x] |
+| G6 | `unit_converter/` import 가능 스켈레톤 (Red용 NotImplemented 스텁) | [x] |
 
 ### Cycle 0 — 환경
 
@@ -53,16 +53,17 @@ G5, G6부터 진행한 뒤 tests/entity/ 첫 TC만 작성. 구현 코드는 아�
 
 ---
 
-## Cycle 1 — Entity FR-04 ⭐ (첫 Red)
+## Cycle 1 — Entity FR-04 ⭐ (첫 Red → Green 완료)
 
 **파일:** `tests/entity/test_conversion_engine.py`
 
-- [ ] `test_entity_FR04_meter_hub_converts_to_feet_and_yard` 작성
+- [x] `test_entity_FR04_meter_hub_converts_to_feet_and_yard` — Then assert 교체
   - Given: registry meter(1.0), feet(3.28084), yard(1.09361)
   - When: `engine.convert(Quantity("meter", 1.0))`
   - Then: feet≈3.28084, yard≈1.09361
-- [ ] `unit_converter/conversion/engine.py` — `NotImplementedError` 스텁만
-- [ ] `pytest tests/entity/test_conversion_engine.py::test_entity_FR04_meter_hub_converts_to_feet_and_yard -v` → **FAILED** 확인
+- [x] `test_entity_FR04_feet_yard_cross_consistent` — Then assert 교체
+- [x] `unit_converter/conversion/engine.py` — meter hub `convert` 구현
+- [x] `pytest tests/entity/test_conversion_engine.py -k FR04 -v` → **PASSED** (2)
 
 ---
 
@@ -89,8 +90,7 @@ G5, G6부터 진행한 뒤 tests/entity/ 첫 TC만 작성. 구현 코드는 아�
 
 **파일:** `tests/entity/test_conversion_engine.py`
 
-- [ ] `test_entity_FR04_feet_yard_cross_consistent`
-- [ ] pytest → **FAILED** 확인
+- [x] `test_entity_FR04_feet_yard_cross_consistent` (Cycle 1 Green에 포함)
 
 ---
 
